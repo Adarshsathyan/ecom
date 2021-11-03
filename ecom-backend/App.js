@@ -5,7 +5,10 @@ const db = require('./config/connection');
 const userRouter = require('./routes/user')
 var session=require('express-session');
 var fileUpload = require("express-fileupload")
+var cors = require('cors')
 const bodyParser = require('body-parser');
+
+app.use(cors())
 app.use(session({secret:process.env.SESSION_KEY,cookie:{maxAge:600000}}));
 app.use(express.json())
 app.use(bodyParser.json());

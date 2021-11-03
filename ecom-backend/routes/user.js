@@ -2,22 +2,18 @@ var express = require('express');
 var router = express.Router();
 var userHelper = require('../helper/user-helper');
 
-let verifyLogin = (req,res,next)=>{
-    if(req.session.userLoggedIn){
-        next()
-    }else{
-        
-        res.send({status:false})
-    }
-}
+
 
 //signup
 router.post('/signup',(req,res)=>{
     userHelper.signUp(req.body).then((response)=>{
         if(response.status){
+            data = {}
             req.session.userLoggedIn = true;
             req.session.user=response.user;
-            res.send({status:true})
+            data.status=true
+            data.user=response.user;
+            res.send(data)
         }else{
             res.send({status:false})
         }
@@ -43,7 +39,7 @@ router.get('/logout',(req,res)=>{
     res.send({status:true})
 })
 //addproduct
-router.post('/addproduct',verifyLogin,(req,res)=>{     
+router.post('/addproduct',(req,res)=>{     
     userHelper.addProduct(req.body).then((resp)=>{
         if(resp.status){
             
@@ -57,7 +53,7 @@ router.post('/addproduct',verifyLogin,(req,res)=>{
 })
 
 //list product
-router.get('/products',verifyLogin,(req,res)=>{
+router.get('/products',(req,res)=>{
     userHelper.listProducts().then((products)=>{
         res.send(products)
     })
